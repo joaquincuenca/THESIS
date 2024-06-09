@@ -8,8 +8,8 @@ function login() {
 
     // Simple validation
     if (username === validUsername && password === validPassword) {
-        // Redirect to dashboard
-        window.location.href = 'dashboard.html';
+        // Redirect to main
+        window.location.href = 'main.html';
     } else {
         alert('Invalid username or password');
     }
@@ -28,3 +28,28 @@ function register() {
         alert('Please enter both username and password');
     }
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const loginButton = document.getElementById('loginButton');
+    loginButton.addEventListener('click', login);
+});
+
+function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    // Hardcoded username and password for demonstration purposes
+    const validUsername = "user";
+    const validPassword = "pass";
+
+    // Simple validation
+    if (username === validUsername && password === validPassword) {
+        // Redirect to main
+        window.location.href = '/main';
+    } else {
+        alert('Invalid username or password');
+    }
+}
+
+
