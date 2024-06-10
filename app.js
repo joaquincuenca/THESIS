@@ -39,10 +39,11 @@ app.use(session({
 
 // User Schema and Model
 const userSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    address: { type: String, required: true },
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
 });
-
 const User = mongoose.model('User', userSchema);
 
 // Middleware to check if user is authenticated
@@ -63,6 +64,13 @@ app.get('/', (req, res) => {
     res.render('main', { title: 'Main' });
 });
 
+app.get('/main', (req, res) => {
+    res.render('dashboard-main', { title: 'Dashboard' });
+});
+
+
+
+
 // Add a route for rendering the login page
 app.get('/login', (req, res) => {
     res.render('index', { title: 'Login Page', error: null });
@@ -74,9 +82,9 @@ app.get('/register', (req, res) => {
 
 app.post('/register', async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { name, address, username, password } = req.body;
 
-        if (!username || !password) {
+        if (!name || !address || !username || !password) {
             return res.render('register', { title: 'Register Page', error: 'All fields are required.' });
         }
 
@@ -86,14 +94,15 @@ app.post('/register', async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ username, password: hashedPassword });
+        const newUser = new User({ name, address, username, password: hashedPassword });
         await newUser.save();
-        res.redirect('/');
+        res.redirect('/login');
     } catch (err) {
         console.error(err);
         res.status(500).render('register', { title: 'Register Page', error: 'Error registering new user. Please try again.' });
     }
 });
+
 
 app.post('/login', async (req, res) => {
     try {
@@ -117,6 +126,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
+
 app.post('/signout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -131,6 +141,6 @@ app.get('/main', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running`);
 });
 
